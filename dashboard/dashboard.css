@@ -1,0 +1,130 @@
+@import url("https://fonts.googleapis.com/css2?family=Ga+Maamli&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Pacifico&family=Yanone+Kaffeesatz:wght@200..700&display=swap");
+
+:root {
+  --purple: #6c63ff;
+  --bgColor: #861aec;
+  --black: #000000;
+  --white: #f7f7f7;
+  --grey: #808080;
+  --lightGrey: #d3d3d3;
+  --h1-color: #252525;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Kanit", sans-serif;
+}
+
+body {
+  width: 100%;
+  animation: bgChanger 20s linear infinite;
+}
+
+@keyframes bgChanger {
+  0% {
+    background-color: var(--purple);
+  }
+  50% {
+    background-color: var(--bgColor);
+  }
+  100% {
+    background-color: var(--purple);
+  }
+}
+
+nav {
+  width: 100%;
+  background-color: var(--h1-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+nav h1 {
+  color: var(--white);
+  text-transform: uppercase;
+  font-family: "Pacifico", sans-serif;
+}
+
+nav button {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid var(--white);
+  background-color: var(--h1-color);
+  color: var(--white);
+}
+
+h2 {
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  color: var(--white);
+  border-bottom: 2px solid var(--black);
+}
+
+.card-container {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.card-container .card {
+  width: 300px;
+  /* border: 1px solid var(--black); */
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: var(--white);
+  gap: 10px;
+  box-shadow: 2px 2px 10px var(--black);
+}
+
+.card-container .card img {
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid var(--h1-color);
+}
+
+.card-container .card h3 {
+  text-transform: capitalize;
+  border-bottom: 1px solid var(--black);
+}
+
+.card-container .card p {
+  text-transform: capitalize;
+  word-wrap: break-word;
+}
+
+.card-container .card .cardBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--black);
+  padding-top: 10px;
+}
+
+.card-container .card .cardBtn button {
+  width: 49%;
+  border: none;
+  padding: 5px;
+  color: var(--white);
+  border-radius: 2px;
+}
+
+.card-container .card .cardBtn button:first-child {
+  background-color: green;
+}
+
+.card-container .card .cardBtn button:last-child {
+  background-color: red;
+}

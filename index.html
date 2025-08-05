@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Firebase Website</title>
+
+    <link rel="stylesheet" href="./style.css" />
+
+    <!-- sweet alert CDN -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  </head>
+
+  <body>
+    <!-- navbar start -->
+
+    <nav>
+      <div class="logo"><a href="../index.html">Firebase</a></div>
+    </nav>
+
+    <!-- navbar end -->
+
+    <!-- ========================  LOGIN FORM Start =========================== -->
+
+    <div class="container" id="container-1">
+      <h1>LogIn</h1>
+      <form class="form" id="loginForm" onsubmit="signinForm(event)" action="#">
+        <input id="checkEmail" type="email" placeholder="EMAIL" />
+
+        <br />
+        <input id="CheckPassword" type="password" placeholder="PASSWORD" />
+
+        <br />
+        <a href="#">forgot password?</a>
+        <br />
+        <button class="button" id="loginBtn">LogIn</button>
+      </form>
+      <p>
+        Don't have an account?
+        <button id="pageBtn-1" class="pageBtn">Signup</button>
+      </p>
+      <p>Or</p>
+      <input class="fb-btn" type="button" value="LogIn with Facebook" />
+      <br />
+      <input class="g-btn" type="button" value="LogIn with Google" />
+    </div>
+
+    <!-- ========================  SIGNUP FORM Start =========================== -->
+
+    <div class="container hidden-form" id="container-2">
+      <h1>SignUp</h1>
+      <form
+        class="form"
+        id="signupForm"
+        onsubmit="signupForm(event)"
+        action="#"
+      >
+        <input id="userName" type="text" placeholder="ENTER YOUR NAME" />
+        <br />
+        <input id="userEmail" type="email" placeholder="EMAIL" />
+
+        <br />
+        <input id="password" type="password" placeholder="CREATE PASSWORD" />
+        <br />
+        <input
+          id="confirmPassword"
+          type="password"
+          placeholder="CONFIRM PASSWORD"
+        />
+        <br />
+        <button class="button" id="signupBtn">SignUp</button>
+      </form>
+      <p>
+        Already have an account?
+        <button id="pageBtn-2" class="pageBtn">LogIn</button>
+      </p>
+      <p>Or</p>
+      <input class="fb-btn" type="button" value="LogIn with Facebook" />
+      <br />
+      <input class="g-btn" type="button" value="LogIn with Google" />
+    </div>
+
+    <!-- footer start -->
+
+    <footer>
+      <p>Developed By Muhammad Shahid: <a href="">github</a></p>
+    </footer>
+
+    <!-- footer end -->
+
+    <!-- JS Link -->
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
