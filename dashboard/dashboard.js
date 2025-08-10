@@ -9,6 +9,11 @@ import {
   collection,
   addDoc,
   getDocs,
+  getDoc,
+  doc,
+  deleteDoc,
+  updateDoc,
+  Timestamp,
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 import {
   getAuth,
@@ -62,27 +67,93 @@ signOutBtn.addEventListener("click", () => {
 
 // ======================= Sign Out Function end =============================
 
+let cardLentgh = 0;
+
+window.addToCard = async function addToCard(id) {
+  cardLentgh++;
+  document.getElementById("cardSec").innerHTML = `Card: <span>${cardLentgh}</span>`;
+  const docRef = doc(db, "products", id); // "users" is collection name
+  const editRef = await getDoc(docRef);
+  const data = editRef.data();
+
+  try {
+    await addDoc(collection(db, "cardsItem"), {
+      title: data.title,
+      price: data.price,
+      description: data.description,
+      imageURL: data.imageURL,
+      userUid,
+      createdAt: Timestamp.now(),
+    });
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+};
+
 // ======================= Read Datas Function start =============================
 
 async function readDatas() {
-  cardsContainer.innerHTML = "";
-  const querySnapshot = await getDocs(collection(db, "products"));
-  querySnapshot.forEach((doc) => {
-    if (doc.data().userUid === userUid) {
-      cardsContainer.innerHTML += `<div class="card">
-        <img src="${doc.data().imageURL}" alt="almari" />
-        <h3>${doc.data().title}</h3>
-        <p class="price">Price: ${doc.data().price}</p>
+  cardsContainer.innerHTML = "<h1> Loading... </h1>";
+  try {
+    const products = await getDocs(collection(db, "products"));
+    // console.log("Total products:", products.size); // .size → number of products
+
+    if (products.size < 1) {
+      cardsContainer.innerHTML = "<h1> Empty! </h1>";
+      return;
+    }
+
+    const userDatas = await getDocs(collection(db, "userDatas"));
+    userDatas.forEach((data) => {
+      const userData = data.data();
+
+      if (userData.userUid === userUid && userData.isAdmin) {
+        cardsContainer.innerHTML = "";
+        products.forEach((item) => {
+          const product = item.data();
+
+          if (product.userUid === userUid) {
+            cardsContainer.innerHTML += `<div class="card">
+        <img src="${product.imageURL}" alt="item" />
+        <h3>${product.title}</h3>
+        <p class="price">Price: ${product.price}</p>
         <p>
-          ${doc.data().description}
+          ${product.description}
         </p>
         <div class="cardBtn">
-          <button>edit</button>
-          <button>delete</button>
+          <button data-bs-toggle="modal"
+          data-bs-target="#updateModal"
+          data-bs-whatever="@getbootstrap" onclick="editBtn('${item.id}')">Edit</button>
+          <button onclick="deleteBtn('${item.id}')">Delete</button>
         </div>
       </div>`;
-    }
-  });
+          }
+        });
+      } else {
+        document.getElementById("cardSec").style.display = "block";
+        document.getElementById("addProduct").style.display = "none";
+
+        cardsContainer.innerHTML = "";
+        products.forEach((item) => {
+          const product = item.data();
+
+          cardsContainer.innerHTML += `<div class="card">
+        <img src="${product.imageURL}" alt="item" />
+        <h3>${product.title}</h3>
+        <p class="price">Price: ${product.price}</p>
+        <p>
+          ${product.description}
+        </p>
+        <div class="cardBtn">
+          <button onclick="addToCard('${item.id}')">Add To Card</button>
+        </div>
+      </div>`;
+        });
+      }
+    });
+  } catch (error) {
+    console.log("err => ", error);
+  }
 }
 
 readDatas();
@@ -91,7 +162,7 @@ readDatas();
 
 // ======================= Add Datas Function start =============================
 
-const addProduct = document.getElementById("addProduct");
+const addProduct = document.getElementById("submitProduct");
 
 addProduct.addEventListener("click", async () => {
   let title = document.getElementById("title").value.trim();
@@ -106,17 +177,80 @@ addProduct.addEventListener("click", async () => {
       description,
       imageURL,
       userUid,
+      createdAt: Timestamp.now(),
     });
-
-    readDatas();
 
     title = "";
     price = "";
     description = "";
     imageURL = "";
+
+    readDatas();
   } catch (e) {
     console.error("Error adding document: ", e);
   }
 });
 
 // ======================= Add Datas Function end =============================
+
+// ======================= Edit Function start =============================
+
+let docRef = null;
+
+window.editBtn = async function editBtn(id) {
+  let editTitle = document.getElementById("edit-title");
+  let editPrice = document.getElementById("edit-price");
+  let editImageURL = document.getElementById("edit-image-url");
+  let editDescription = document.getElementById("edit-description");
+
+  docRef = doc(db, "products", id); // "users" is collection name
+  const editRef = await getDoc(docRef);
+  const data = editRef.data();
+
+  editTitle.value = data.title;
+  editPrice.value = data.price;
+  editImageURL.value = data.imageURL;
+  editDescription.value = data.description;
+};
+
+document.getElementById("updateProduct").addEventListener("click", async () => {
+  let editTitle = document.getElementById("edit-title").value.trim();
+  let editPrice = document.getElementById("edit-price").value.trim();
+  let editImageURL = document.getElementById("edit-image-url").value.trim();
+  let editDescription = document
+    .getElementById("edit-description")
+    .value.trim();
+
+  cardsContainer.innerHTML = "<h1> Loading... </h1>"; // loader
+
+  await updateDoc(docRef, {
+    title: editTitle,
+    price: editPrice,
+    imageURL: editImageURL,
+    description: editDescription,
+    createdAt: Timestamp.now(),
+    userUid,
+  });
+
+  readDatas();
+});
+
+// ======================= Edit Function end =============================
+
+// ======================= Delete Function start =============================
+
+window.deleteBtn = async function deleteBtn(id) {
+  await deleteDoc(doc(db, "products", id));
+  Swal.fire({
+    position: "top-end",
+    icon: "success",
+    title: "Item Deleted..",
+    showConfirmButton: false,
+    timer: 1500,
+  });
+  console.log("delete success");
+
+  readDatas();
+};
+
+// ======================= Delete Function end =============================
